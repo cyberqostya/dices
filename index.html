@@ -13,10 +13,13 @@
       border: 2px solid #000;
       outline: none;
       padding: 10px 20px;
+      color: #000;
+      font-size: 14px;
+      font-weight: bold;
     }
     body {
       width: 100vw;
-      height: 100vh;
+      height: var(--body-height);
       margin: 0;
 
       --cube-size: 50px;
@@ -158,6 +161,8 @@
   </section>
 
   <script>
+    document.documentElement.style.setProperty('--body-height', `${window.innerHeight}px`);
+
     const cubesContainer = document.querySelector('.cubes');
     const cubeHTML = document.querySelector(".container");
     const resultsCoords = [[0,0], [0,270], [270,0], [90,0], [0,90], [0,180]];
