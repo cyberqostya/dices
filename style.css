@@ -1,21 +1,29 @@
-button {
+button, .button {
   background: none;
   border: 2px solid #000;
   outline: none;
   padding: 10px 20px;
   color: #000;
-  font-size: 14px;
   font-weight: bold;
   -webkit-tap-highlight-color: transparent;
   font-size: inherit;
   appearance: none;
+  text-align: center;
+  box-sizing: border-box;
 }
+
+p {
+  margin: 0;
+  user-select: none;
+}
+
 body {
   width: 100vw;
   height: var(--body-height);
   margin: 0;
   overflow: hidden;
   font-size: 18px;
+  font-family: Arial, Helvetica, sans-serif;
 
   --cube-size: 50px;
 }
@@ -134,20 +142,13 @@ section {
   justify-content: center;
   column-gap: 20px;
 }
-.buttons > button {
+.buttons > p {
   width: calc((100% - 20px) / 2);
 }
-.buttons > button:disabled {
+.buttons > p:disabled {
   opacity: .2;
 }
 ._roll {
-  margin: 0;
-  border: 2px solid #000;
-  outline: none;
-  padding: 10px 20px;
-  color: #000;
-  font-weight: bold;
-  -webkit-tap-highlight-color: transparent;
   width: 100%;
 }
 ._roll:disabled {
