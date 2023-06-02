@@ -137,6 +137,9 @@ section {
 .buttons > button {
   width: calc((100% - 20px) / 2);
 }
+.buttons > button:disabled {
+  opacity: .2;
+}
 ._roll {
   margin: 0;
   border: 2px solid #000;

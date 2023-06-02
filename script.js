@@ -27,6 +27,9 @@ const harp = new Audio('./sounds/harp.mp3');
 const fairy = document.querySelector('.fairy');
 const rainbow = document.querySelector('.rainbow');
 
+let inactivityTimeout;
+const incativeCubes = [];
+
 
 function roll(cube) {
   const rotationSign = cube.style.transform.includes("-");
@@ -50,8 +53,23 @@ function roll(cube) {
     luckWillCome = false;
   }
 
+  // Неактивность при бросках
+  function activeButtons() {
+    rollButton.removeAttribute('disabled')
+    addButton.removeAttribute('disabled')
+    removeButton.removeAttribute('disabled')
+    incativeCubes.forEach(i => i.style.pointerEvents = 'all');
+  }
+  if(inactivityTimeout) {
+    clearTimeout(inactivityTimeout);
+  }
   rollButton.setAttribute('disabled', 'true');
-  setTimeout(() => {rollButton.removeAttribute('disabled')}, 5800);
+  addButton.setAttribute('disabled', 'true');
+  removeButton.setAttribute('disabled', 'true');
+  incativeCubes.push(cube);
+  cube.style.pointerEvents = 'none';
+  inactivityTimeout = setTimeout(activeButtons, 6000);
+
 // console.log(result, failCounter);
   return result;
 }
