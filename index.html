@@ -16,11 +16,13 @@
       color: #000;
       font-size: 14px;
       font-weight: bold;
+      -webkit-tap-highlight-color: transparent;
     }
     body {
       width: 100vw;
       height: var(--body-height);
       margin: 0;
+      overflow: hidden;
 
       --cube-size: 50px;
     }
@@ -107,6 +109,16 @@
     .buttons > button {
       width: 40%;
     }
+    ._roll {
+      margin: 0;
+      border: 2px solid #000;
+      outline: none;
+      padding: 10px 20px;
+      color: #000;
+      font-size: 14px;
+      font-weight: bold;
+      -webkit-tap-highlight-color: transparent;
+    }
 
   </style>
 </head>
@@ -155,7 +167,7 @@
       </div>
     </div>
 
-    <button class="_roll" style="margin-top:20px">Бросить</button>
+    <p class="_roll" style="margin-top:20px">Бросить</p>
     <div class="buttons">
       <button class="_remove">Убрать</button>
       <button class="_add">Добавить</button>
