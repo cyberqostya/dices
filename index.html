@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Кубики</title>
+
+  <style>
+    button {
+      background: none;
+      border: 2px solid #000;
+      outline: none;
+      padding: 10px 20px;
+    }
+    body {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+
+      --cube-size: 50px;
+    }
+
+    section {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      padding: 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .cubes {
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      grid-gap: calc(var(--cube-size) / 1.5);
+      justify-content: center;
+    }
+
+
+
+    .container {
+      width: var(--cube-size);
+      height: var(--cube-size);
+      perspective-origin: 50% 50%;
+      perspective: 150px;
+    }
+
+    .cube {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 10s;
+    }
+
+    .cube div {
+      background: radial-gradient(circle, rgba(236,236,236,.9) 0%, rgba(185,185,185,.9) 100%);
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      box-shadow: inset 0 0 2px 3px #5d5d5d;
+      border-radius: 10px;
+      box-sizing: border-box;
+    }
+    .cube .front { transform: translateZ(calc(var(--cube-size)/2)); }
+    .cube .back { transform: rotateX(-180deg) translateZ(calc(var(--cube-size)/2)); }
+    .cube .right { transform: rotateY(90deg) translateZ(calc(var(--cube-size)/2)); }
+    .cube .left { transform:  rotateY(-90deg) translateZ(calc(var(--cube-size)/2)); }
+    .cube .top { transform: rotateX(90deg) translateZ(calc(var(--cube-size)/2)); }
+    .cube .bottom { transform: rotateX(-90deg) translateZ(calc(var(--cube-size)/2)); }
+
+    .dot {
+      display: block;
+      position: absolute;
+      width: calc(var(--cube-size)/8);
+      height: calc(var(--cube-size)/8);
+      background: #414141;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .dot1 { top: calc(var(--cube-size)/4); left: calc(var(--cube-size)/4) }
+    .dot3 { top: calc(var(--cube-size)/4); left: calc(var(--cube-size)/4*3) }
+    .dot4 { top: calc(var(--cube-size)/2); left: calc(var(--cube-size)/4) }
+    .dot5 { top: calc(var(--cube-size)/2); left: calc(var(--cube-size)/2) }
+    .dot6 { top: calc(var(--cube-size)/2); left: calc(var(--cube-size)/4*3) }
+    .dot7 { top: calc(var(--cube-size)/4*3); left: calc(var(--cube-size)/4) }
+    .dot9 { top: calc(var(--cube-size)/4*3); left: calc(var(--cube-size)/4*3) }
+
+    .buttons {
+      margin-top: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      column-gap: 20px;
+    }
+    .buttons > button {
+      width: 40%;
+    }
+
+  </style>
+</head>
+
+<body>
+  <section>
+    <div class="cubes">
+      <div class="container">
+        <div class="cube">
+          <div class="front">
+            <span class="dot dot5"></span>
+          </div>
+          <div class="back">
+            <span class="dot dot1"></span>
+            <span class="dot dot3"></span>
+            <span class="dot dot4"></span>
+            <span class="dot dot6"></span>
+            <span class="dot dot7"></span>
+            <span class="dot dot9"></span>
+          </div>
+          <div class="right">
+            <span class="dot dot3"></span>
+            <span class="dot dot7"></span>
+          </div>
+          <div class="left">
+            <span class="dot dot1"></span>
+            <span class="dot dot3"></span>
+            <span class="dot dot5"></span>
+            <span class="dot dot7"></span>
+            <span class="dot dot9"></span>
+          </div>
+          <div class="top">
+            <span class="dot dot3"></span>
+            <span class="dot dot5"></span>
+            <span class="dot dot7"></span>
+          </div>
+          <div class="bottom">
+            <span class="dot dot1"></span>
+            <span class="dot dot3"></span>
+            <span class="dot dot7"></span>
+            <span class="dot dot9"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="_roll" style="margin-top:auto">Бросить</button>
+    <div class="buttons">
+      <button class="_remove">Убрать</button>
+      <button class="_add">Добавить</button>
+    </div>
+  </section>
+
+  <script>
+    const cubesContainer = document.querySelector('.cubes');
+    const cubeHTML = document.querySelector(".container");
+    const resultsCoords = [[0,0], [0,270], [270,0], [90,0], [0,90], [0,180]];
+    const addButton = document.querySelector('.buttons ._add');
+    const removeButton = document.querySelector('.buttons ._remove');
+    const rollButton = document.querySelector('._roll');
+
+
+    function roll(cube) {
+      const rotationSign = cube.style.transform.includes('-');;
+      const result = Math.ceil(Math.random() * 6);
+      const minRotations = 1;
+      const maxRotations = 10;
+      const xRotations = Math.ceil(Math.random() * (maxRotations - minRotations)) + minRotations;
+      const yRotations = Math.ceil(Math.random() * (maxRotations - minRotations)) + minRotations;
+      const xResultDeg = resultsCoords[result - 1][0] + 360 * (rotationSign ? xRotations : -xRotations);
+      const yResultDeg = resultsCoords[result - 1][1] + 360 * (rotationSign ? yRotations : -yRotations);
+
+      cube.style.webkitTransform =
+        "rotateX(" + xResultDeg + "deg) rotateY(" + yResultDeg + "deg)";
+      cube.style.transform =
+        "rotateX(" + xResultDeg + "deg) rotateY(" + yResultDeg + "deg)";
+    }
+
+
+    cubesContainer.addEventListener('click', (e) => {
+      if (e.target.closest('.cube')) roll(e.target.closest('.cube'));
+    });
+
+    addButton.addEventListener('click', () => { cubesContainer.insertAdjacentElement('beforeend', cubeHTML.cloneNode(true) ) })
+    removeButton.addEventListener('click', () => { cubesContainer.children[0].remove() })
+    rollButton.addEventListener('click', () => { Array.from(cubesContainer.children).forEach(i => roll(i.querySelector('.cube'))) })
+  </script>
+</body>
+
+</html>
