@@ -113,6 +113,8 @@
 
 <body>
   <section>
+    <button class="_success" style="opacity: 0;">Счастливый</button>
+
     <div class="cubes">
       <div class="container">
         <div class="cube">
@@ -153,7 +155,7 @@
       </div>
     </div>
 
-    <button class="_roll" style="margin-top:auto">Бросить</button>
+    <button class="_roll" style="margin-top:20px">Бросить</button>
     <div class="buttons">
       <button class="_remove">Убрать</button>
       <button class="_add">Добавить</button>
@@ -169,11 +171,17 @@
     const addButton = document.querySelector('.buttons ._add');
     const removeButton = document.querySelector('.buttons ._remove');
     const rollButton = document.querySelector('._roll');
+    let isSuccessfullRoll = false;
+    const successButton = document.querySelector('._success');
 
 
     function roll(cube) {
-      const rotationSign = cube.style.transform.includes('-');;
-      const result = Math.ceil(Math.random() * 6);
+      const rotationSign = cube.style.transform.includes('-');
+      let result = Math.ceil(Math.random() * 6);
+      if(isSuccessfullRoll) {
+        result = Math.random() > .5 ? 5 : 6;
+        isSuccessfullRoll = false;
+      }
       const minRotations = 1;
       const maxRotations = 10;
       const xRotations = Math.ceil(Math.random() * (maxRotations - minRotations)) + minRotations;
@@ -194,7 +202,8 @@
 
     addButton.addEventListener('click', () => { cubesContainer.insertAdjacentElement('beforeend', cubeHTML.cloneNode(true) ) })
     removeButton.addEventListener('click', () => { cubesContainer.children[0].remove() })
-    rollButton.addEventListener('click', () => { Array.from(cubesContainer.children).forEach(i => roll(i.querySelector('.cube'))) })
+    rollButton.addEventListener('click', () => Array.from(cubesContainer.children).sort((a,b) => Math.random() > .5 ? 1 : -1).forEach(i => roll(i.querySelector('.cube'))))
+    successButton.addEventListener('click', () => { isSuccessfullRoll = true })
   </script>
 </body>
 
