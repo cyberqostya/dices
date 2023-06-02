@@ -3,6 +3,8 @@ document.documentElement.style.setProperty(
   `${window.innerHeight}px`
 );
 
+window.scrollTo(0,1);
+
 
 const cubesContainer = document.querySelector(".cubes");
 const cubeHTML = document.querySelector(".container");
