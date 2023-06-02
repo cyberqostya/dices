@@ -8,6 +8,7 @@ button {
   font-weight: bold;
   -webkit-tap-highlight-color: transparent;
   font-size: inherit;
+  appearance: none;
 }
 body {
   width: 100vw;
@@ -52,7 +53,7 @@ section {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 10s;
+  transition: transform 6s;
 }
 
 .cube div {
@@ -145,6 +146,9 @@ section {
   font-weight: bold;
   -webkit-tap-highlight-color: transparent;
   width: 100%;
+}
+._roll:disabled {
+  opacity: .2;
 }
 
 .fairy {

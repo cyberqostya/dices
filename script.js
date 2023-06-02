@@ -49,6 +49,9 @@ function roll(cube) {
     luckCome();
     luckWillCome = false;
   }
+
+  rollButton.setAttribute('disabled', 'true');
+  setTimeout(() => {rollButton.removeAttribute('disabled')}, 5800);
 // console.log(result, failCounter);
   return result;
 }
