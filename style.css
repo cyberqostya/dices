@@ -14,7 +14,7 @@ body {
   height: var(--body-height);
   margin: 0;
   overflow: hidden;
-  font-size: 16px;
+  font-size: 18px;
 
   --cube-size: 50px;
 }
@@ -134,7 +134,7 @@ section {
   column-gap: 20px;
 }
 .buttons > button {
-  width: 40%;
+  width: calc((100% - 20px) / 2);
 }
 ._roll {
   margin: 0;
@@ -144,6 +144,7 @@ section {
   color: #000;
   font-weight: bold;
   -webkit-tap-highlight-color: transparent;
+  width: 100%;
 }
 
 .fairy {
