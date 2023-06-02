@@ -145,14 +145,12 @@ section {
 .buttons > p {
   width: calc((100% - 20px) / 2);
 }
-.buttons > p:disabled {
+.button._disabled {
   opacity: .2;
+  pointer-events: none;
 }
 ._roll {
   width: 100%;
-}
-._roll:disabled {
-  opacity: .2;
 }
 
 .fairy {

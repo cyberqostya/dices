@@ -55,17 +55,17 @@ function roll(cube) {
 
   // Неактивность при бросках
   function activeButtons() {
-    rollButton.removeAttribute('disabled')
-    addButton.removeAttribute('disabled')
-    removeButton.removeAttribute('disabled')
+    rollButton.classList.remove('_disabled');
+    addButton.classList.remove('_disabled');
+    removeButton.classList.remove('_disabled');
     incativeCubes.forEach(i => i.style.pointerEvents = 'all');
   }
   if(inactivityTimeout) {
     clearTimeout(inactivityTimeout);
   }
-  rollButton.setAttribute('disabled', 'true');
-  addButton.setAttribute('disabled', 'true');
-  removeButton.setAttribute('disabled', 'true');
+  rollButton.classList.add('_disabled');
+  addButton.classList.add('_disabled');
+  removeButton.classList.add('_disabled');
   incativeCubes.push(cube);
   cube.style.pointerEvents = 'none';
   inactivityTimeout = setTimeout(activeButtons, 6000);
