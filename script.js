@@ -1,3 +1,4 @@
+// Установка высоты вьюпорта для apple
 document.documentElement.style.setProperty(
   "--body-height",
   `${window.innerHeight}px`
@@ -27,13 +28,18 @@ const harp = new Audio('./sounds/harp.mp3');
 const fairy = document.querySelector('.fairy');
 const rainbow = document.querySelector('.rainbow');
 
+// Таймер неактивности интефейса при бросках
 let inactivityTimeout;
 const incativeCubes = [];
+
+// Инфо
+const infoButton = document.querySelector(".info");
+const infoOverlay = document.querySelector(".info__overlay");
 
 
 function roll(cube) {
   const rotationSign = cube.style.transform.includes("-");
-  let result = Math.ceil(Math.random() * 6);
+  let result = Math.ceil(Math.random() * 4);
   if (isSuccessfullRoll) {
     result = 6;
     isSuccessfullRoll = false;
@@ -48,10 +54,12 @@ function roll(cube) {
   cube.style.webkitTransform = "rotateX(" + xResultDeg + "deg) rotateY(" + yResultDeg + "deg)";
   cube.style.transform = "rotateX(" + xResultDeg + "deg) rotateY(" + yResultDeg + "deg)";
 
-  if(luckWillCome) {
+  if (luckWillCome) {
     luckCome();
     luckWillCome = false;
   }
+
+
 
   // Неактивность при бросках
   function activeButtons() {
@@ -60,7 +68,7 @@ function roll(cube) {
     removeButton.classList.remove('_disabled');
     incativeCubes.forEach(i => i.style.pointerEvents = 'all');
   }
-  if(inactivityTimeout) {
+  if (inactivityTimeout) {
     clearTimeout(inactivityTimeout);
   }
   rollButton.classList.add('_disabled');
@@ -70,19 +78,19 @@ function roll(cube) {
   cube.style.pointerEvents = 'none';
   inactivityTimeout = setTimeout(activeButtons, 6000);
 
-// console.log(result, failCounter);
+  // console.log(result, failCounter);
   return result;
 }
 
 function checkResults(rollResult) {
-  if(rollResult.some(i => i>=5)) {
+  if (rollResult.some(i => i >= 5)) {
     failCounter = 0;
   } else {
     failCounter++;
   }
 
-  if(failCounter >= 3) {
-    if( Math.random() < (failCounter + 3) * 0.1 ) {
+  if (failCounter >= 3) {
+    if (Math.random() < (failCounter + 3) * 0.1) {
       luckWillCome = true;
       isSuccessfullRoll = true;
     }
@@ -93,11 +101,12 @@ function luckCome() {
   harp.play();
   fairy.classList.add('_active');
   rainbow.classList.add('_active');
-  setTimeout(() => { 
+  setTimeout(() => {
     fairy.classList.remove('_active');
     rainbow.classList.remove('_active');
   }, 2500)
 }
+
 
 
 // Добавление и удаление кубика
@@ -125,4 +134,7 @@ rollButton.addEventListener("click", () => {
 });
 successButton.addEventListener("click", () => {
   isSuccessfullRoll = true;
+});
+infoButton.addEventListener('click', () => {
+  infoOverlay.classList.toggle('_active');
 });

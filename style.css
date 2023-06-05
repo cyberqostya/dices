@@ -1,4 +1,5 @@
-button, .button {
+button,
+.button {
   background: none;
   border: 2px solid #000;
   outline: none;
@@ -146,11 +147,20 @@ section {
   width: calc((100% - 20px) / 2);
 }
 .button._disabled {
-  opacity: .2;
+  opacity: 0.2;
   pointer-events: none;
 }
 ._roll {
   width: 100%;
+}
+
+._success {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border: none;
 }
 
 .fairy {
@@ -162,10 +172,13 @@ section {
   left: -200px;
 }
 .fairy._active {
-  animation: fairy 2s ease-in ;
+  animation: fairy 2s ease-in;
 }
 @keyframes fairy {
-  100% { transform: translateX(100vw); left: 0; }
+  100% {
+    transform: translateX(100vw);
+    left: 0;
+  }
 }
 .rainbow {
   width: 100vw;
@@ -181,6 +194,71 @@ section {
   animation: rainbow 2s ease-in;
 }
 @keyframes rainbow {
-  50% { opacity: .8; }
-  100% { opacity: 0; }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.info {
+  width: 20px;
+  height: 20px;
+  background: center/cover url(./images/info.svg) no-repeat;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+.info__hoop {
+  width: 100px;
+  height: 100px;
+  background: center/cover url(./images/hoop.webp) no-repeat;
+}
+.info__overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  background-color: #000000cb;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.4s;
+  opacity: 0;
+  pointer-events: none;
+}
+.info__overlay._active {
+  opacity: 1;
+  pointer-events: all;
+}
+.info__text-container {
+  font-size: 11px;
+  line-height: 1.3;
+  font-style: italic;
+  border-radius: 15px;
+  background-color: #fff;
+  padding: 15px 20px;
+  text-align: justify;
+
+  transition: all 0.4s;
+  transform: scale(0);
+}
+.info__overlay._active .info__text-container {
+  transform: scale(1);
+}
+.info__text:not(:last-child) {
+  margin-bottom: 0.7em;
+}
+.info__text._small {
+  font-size: 3px;
+  opacity: 0.2;
+  text-align: center;
+  margin: 8px 0;
 }
