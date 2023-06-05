@@ -172,7 +172,7 @@ section {
   left: -200px;
 }
 .fairy._active {
-  animation: fairy 2s ease-in;
+  animation: fairy 3s ease-in;
 }
 @keyframes fairy {
   100% {

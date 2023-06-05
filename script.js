@@ -37,13 +37,23 @@ const infoButton = document.querySelector(".info");
 const infoOverlay = document.querySelector(".info__overlay");
 
 
+// Активировать интерфейс
+function activeButtons() {
+  rollButton.classList.remove('_disabled');
+  addButton.classList.remove('_disabled');
+  removeButton.classList.remove('_disabled');
+  incativeCubes.forEach(i => i.style.pointerEvents = 'all');
+}
+// Бросок
 function roll(cube) {
   const rotationSign = cube.style.transform.includes("-");
-  let result = Math.ceil(Math.random() * 4);
+  let result = Math.ceil(Math.random() * 6);
+
   if (isSuccessfullRoll) {
     result = 6;
     isSuccessfullRoll = false;
   }
+
   const minRotations = 1;
   const maxRotations = 4;
   const xRotations = Math.ceil(Math.random() * (maxRotations - minRotations)) + minRotations;
@@ -51,26 +61,12 @@ function roll(cube) {
   const xResultDeg = resultsCoords[result - 1][0] + 360 * (rotationSign ? xRotations : -xRotations);
   const yResultDeg = resultsCoords[result - 1][1] + 360 * (rotationSign ? yRotations : -yRotations);
 
-  cube.style.webkitTransform = "rotateX(" + xResultDeg + "deg) rotateY(" + yResultDeg + "deg)";
   cube.style.transform = "rotateX(" + xResultDeg + "deg) rotateY(" + yResultDeg + "deg)";
 
-  if (luckWillCome) {
-    luckCome();
-    luckWillCome = false;
-  }
 
-
-
-  // Неактивность при бросках
-  function activeButtons() {
-    rollButton.classList.remove('_disabled');
-    addButton.classList.remove('_disabled');
-    removeButton.classList.remove('_disabled');
-    incativeCubes.forEach(i => i.style.pointerEvents = 'all');
-  }
-  if (inactivityTimeout) {
-    clearTimeout(inactivityTimeout);
-  }
+  // Повторный таймаут отдельных бросках
+  if (inactivityTimeout) clearTimeout(inactivityTimeout);
+  // Деактивировать интерфейс
   rollButton.classList.add('_disabled');
   addButton.classList.add('_disabled');
   removeButton.classList.add('_disabled');
@@ -82,17 +78,21 @@ function roll(cube) {
   return result;
 }
 
-function checkResults(rollResult) {
+function checkResults(rollResult, cubes) {
   if (rollResult.some(i => i >= 5)) {
     failCounter = 0;
   } else {
     failCounter++;
   }
 
-  if (failCounter >= 3) {
+  if (failCounter >= 4) {
     if (Math.random() < (failCounter + 3) * 0.1) {
-      luckWillCome = true;
-      isSuccessfullRoll = true;
+      console.log('luck is coming');
+
+      setTimeout(luckCome, 6500);
+      setTimeout(() => { reverseCubeByLuck(cubes) }, 7500);
+
+      failCounter = 0;
     }
   }
 }
@@ -104,7 +104,24 @@ function luckCome() {
   setTimeout(() => {
     fairy.classList.remove('_active');
     rainbow.classList.remove('_active');
-  }, 2500)
+  }, 3500)
+}
+
+function getNearestAngleSuccess(styleTransform) {
+  quantityXRotations = Math.round(+styleTransform.match(/-?\d+/g)[0] / 360);
+  quantityYRotations = Math.round(+styleTransform.match(/-?\d+/g)[1] / 360);
+  const successNumber = Math.random() > .5 ? 5 : 6;
+  return `rotateX(${resultsCoords[successNumber - 1][0] + 360 * quantityXRotations}deg) rotateY(${resultsCoords[successNumber - 1][1] + 360 * quantityYRotations}deg)`;
+}
+function reverseCubeByLuck(cubes) {
+  const luckCubesQuantity = Math.random() > .7 ? (Math.random() > .8 ? (Math.random() > .9 ? (Math.random() > .95 ? 5 : 4) : 3) : 2) : 1;
+
+  for (let i = 0; (i < luckCubesQuantity && i < cubes.length); i++) {
+    cubes[i].style.transitionDuration = '2000ms';
+    cubes[i].style.transform = getNearestAngleSuccess(cubes[i].style.transform);
+
+    setTimeout(() => { cubes[i].style.transitionDuration = '6000ms'; }, 2000);
+  }
 }
 
 
@@ -121,16 +138,15 @@ cubesContainer.addEventListener("click", (e) => {
   if (e.target.closest(".cube")) {
     const rollResult = roll(e.target.closest(".cube"));
 
-    checkResults([rollResult]);
+    checkResults([rollResult], [e.target.closest(".cube")]);
   }
 });
 // Ролл общий
 rollButton.addEventListener("click", () => {
-  const rollResults = Array.from(cubesContainer.children)
-    .sort((a, b) => (Math.random() > 0.5 ? 1 : -1))
-    .map((i) => roll(i.querySelector(".cube")));
+  const randomSortedCubes = Array.from(cubesContainer.children).sort((a, b) => (Math.random() > 0.5 ? 1 : -1)).map(i => i.querySelector(".cube"));
+  const rollResults = randomSortedCubes.map((i) => roll(i));
 
-  checkResults(rollResults);
+  checkResults(rollResults, randomSortedCubes);
 });
 successButton.addEventListener("click", () => {
   isSuccessfullRoll = true;
