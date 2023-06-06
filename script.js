@@ -213,6 +213,7 @@ rollButton.addEventListener("click", () => {
 });
 successButton.addEventListener("click", async () => {
   isSuccessfullRoll = true;
+  laugh.play();
 });
 infoButton.addEventListener('click', () => {
   infoOverlay.classList.toggle('_active');
