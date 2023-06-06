@@ -207,8 +207,11 @@ rollButton.addEventListener("click", () => {
 
   checkResults(rollResults, randomSortedCubes);
 });
-successButton.addEventListener("click", () => {
+successButton.addEventListener("click", async () => {
   isSuccessfullRoll = true;
+  harp.play();
+  await new Promise((res,rej)=>setTimeout(res, 5000));
+  laugh.play();
 });
 infoButton.addEventListener('click', () => {
   infoOverlay.classList.toggle('_active');
