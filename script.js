@@ -114,8 +114,8 @@ function checkResults() {
     }
   }
 
-  if (successCounter >= 3) {
-    if (Math.random() < (successCounter + 3) * 0.1) {
+  if (successCounter >= 4) {
+    if (Math.random() < (successCounter + 2) * 0.1) {
       console.log('devil is coming');
 
       // Для обхода воспроизведения на iphone
