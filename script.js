@@ -1,8 +1,15 @@
+import { styles } from './style.js';
+
 // Установка высоты вьюпорта для apple
 document.documentElement.style.setProperty(
   "--body-height",
   `${window.innerHeight}px`
 );
+// Добавление цвета кубикам
+const randomStyle = Math.floor(Math.random() * styles.length);
+document.body.style.setProperty('--background', styles[randomStyle][0]);
+document.body.style.setProperty('--borderdot', styles[randomStyle][1]);
+
 
 
 const cubesContainer = document.querySelector(".cubes");
@@ -22,11 +29,15 @@ const rollButton = document.querySelector("._roll");
 let isSuccessfullRoll = false;
 const successButton = document.querySelector("._success");
 
-let luckWillCome = false;
 let failCounter = 0;
 const harp = new Audio('./sounds/harp.mp3');
 const fairy = document.querySelector('.fairy');
 const rainbow = document.querySelector('.rainbow');
+
+let successCounter = 0;
+const laugh = new Audio('./sounds/laugh.mpeg');
+const devil = document.querySelector('.devil');
+const fire = document.querySelector('.fire');
 
 // Таймер неактивности интефейса при бросках
 let inactivityTimeout;
@@ -55,7 +66,7 @@ function roll(cube) {
   }
 
   const minRotations = 1;
-  const maxRotations = 4;
+  const maxRotations = 7;
   const xRotations = Math.ceil(Math.random() * (maxRotations - minRotations)) + minRotations;
   const yRotations = Math.ceil(Math.random() * (maxRotations - minRotations)) + minRotations;
   const xResultDeg = resultsCoords[result - 1][0] + 360 * (rotationSign ? xRotations : -xRotations);
@@ -74,15 +85,17 @@ function roll(cube) {
   cube.style.pointerEvents = 'none';
   inactivityTimeout = setTimeout(activeButtons, 6000);
 
-  // console.log(result, failCounter);
+  console.log(result, failCounter, successCounter);
   return result;
 }
 
 function checkResults(rollResult, cubes) {
   if (rollResult.some(i => i >= 5)) {
     failCounter = 0;
+    successCounter++;
   } else {
     failCounter++;
+    successCounter = 0;
   }
 
   if (failCounter >= 4) {
@@ -90,13 +103,25 @@ function checkResults(rollResult, cubes) {
       console.log('luck is coming');
 
       setTimeout(luckCome, 6500);
-      setTimeout(() => { reverseCubeByLuck(cubes) }, 7500);
+      setTimeout(() => { reverseCubeByExternalForces(cubes, 'luck') }, 7500);
 
       failCounter = 0;
     }
   }
+
+  if (successCounter >= 3) {
+    if (Math.random() < (successCounter + 3) * 0.1) {
+      console.log('devil is coming');
+
+      setTimeout(devilCome, 6500);
+      setTimeout(() => { reverseCubeByExternalForces(cubes, 'devil') }, 7500);
+
+      successCounter = 0;
+    }
+  }
 }
 
+// Анимация Феи
 function luckCome() {
   harp.play();
   fairy.classList.add('_active');
@@ -107,18 +132,52 @@ function luckCome() {
   }, 3500)
 }
 
-function getNearestAngleSuccess(styleTransform) {
-  quantityXRotations = Math.round(+styleTransform.match(/-?\d+/g)[0] / 360);
-  quantityYRotations = Math.round(+styleTransform.match(/-?\d+/g)[1] / 360);
-  const successNumber = Math.random() > .5 ? 5 : 6;
-  return `rotateX(${resultsCoords[successNumber - 1][0] + 360 * quantityXRotations}deg) rotateY(${resultsCoords[successNumber - 1][1] + 360 * quantityYRotations}deg)`;
+// Анимация Дьявола
+function devilCome() {
+  laugh.play();
+  devil.classList.add('_active');
+  fire.classList.add('_active');
+  setTimeout(() => {
+    devil.classList.remove('_active');
+    fire.classList.remove('_active');
+  }, 2500);
 }
-function reverseCubeByLuck(cubes) {
-  const luckCubesQuantity = Math.random() > .7 ? (Math.random() > .8 ? (Math.random() > .9 ? (Math.random() > .95 ? 5 : 4) : 3) : 2) : 1;
 
-  for (let i = 0; (i < luckCubesQuantity && i < cubes.length); i++) {
+// Поповрот до ближайшего переданного значения
+function getNearestAngleSuccess(styleTransform, value) {
+  const quantityXRotations = Math.round(+styleTransform.match(/-?\d+/g)[0] / 360);
+  const quantityYRotations = Math.round(+styleTransform.match(/-?\d+/g)[1] / 360);
+  return `rotateX(${resultsCoords[value - 1][0] + 360 * quantityXRotations}deg) rotateY(${resultsCoords[value - 1][1] + 360 * quantityYRotations}deg)`;
+}
+// Поворот кубов высшими силами
+function reverseCubeByExternalForces(cubes, force) {
+  const luckCubesQuantity = Math.random() > .7 ? (Math.random() > .8 ? (Math.random() > .9 ? (Math.random() > .95 ? 5 : 4) : 3) : 2) : 1;
+  const devilCubesQuantity = Math.random() > .6 ? (Math.random() > .7 ? (Math.random() > .8 ? (Math.random() > .9 ? 5 : 4) : 3) : 2) : 1;
+
+  let cubesQuantity;
+  switch (force) {
+    case 'luck':
+      cubesQuantity = luckCubesQuantity;
+      break;
+    case 'devil':
+      cubesQuantity = devilCubesQuantity;
+      break;
+  }
+
+  for (let i = 0; (i < cubesQuantity && i < cubes.length); i++) {
     cubes[i].style.transitionDuration = '2000ms';
-    cubes[i].style.transform = getNearestAngleSuccess(cubes[i].style.transform);
+    
+    let value;
+    switch (force) {
+      case 'luck':
+        value = Math.random() > .5 ? 5 : 6;
+        break;
+      case 'devil':
+        value = Math.random() > .5 ? 1 : 2;
+        break;
+    }
+
+    cubes[i].style.transform = getNearestAngleSuccess(cubes[i].style.transform, value);
 
     setTimeout(() => { cubes[i].style.transitionDuration = '6000ms'; }, 2000);
   }
