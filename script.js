@@ -35,7 +35,7 @@ const fairy = document.querySelector('.fairy');
 const rainbow = document.querySelector('.rainbow');
 
 let successCounter = 0;
-const laugh = new Audio('./sounds/laugh.mpeg');
+const laugh = new Audio('./sounds/laugh.mp3');
 const devil = document.querySelector('.devil');
 const fire = document.querySelector('.fire');
 
