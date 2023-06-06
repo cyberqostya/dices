@@ -223,7 +223,7 @@ section {
   transform: scale(-1, 1);
 }
 .devil._active {
-  animation: devil 2s ease-in;
+  animation: devil 3s ease-in;
 }
 @keyframes devil {
   100% {
@@ -242,11 +242,11 @@ section {
   pointer-events: none;
 }
 .fire._active {
-  animation: fire 2.5s ease-in;
+  animation: fire 3s ease-in;
 }
 @keyframes fire {
   50% {
-    opacity: 0.7;
+    opacity: 0.5;
   }
   100% {
     opacity: 0;

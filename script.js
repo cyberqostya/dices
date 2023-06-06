@@ -142,7 +142,7 @@ function luckCome() {
   setTimeout(() => {
     fairy.classList.remove('_active');
     rainbow.classList.remove('_active');
-  }, 3500)
+  }, 3100)
 }
 
 // Анимация Дьявола
@@ -153,7 +153,7 @@ function devilCome() {
   setTimeout(() => {
     devil.classList.remove('_active');
     fire.classList.remove('_active');
-  }, 2500);
+  }, 3100);
 }
 
 // Поповрот до ближайшего переданного значения
