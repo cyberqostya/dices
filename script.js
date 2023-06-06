@@ -39,6 +39,9 @@ const laugh = new Audio('./sounds/laugh.mp3');
 const devil = document.querySelector('.devil');
 const fire = document.querySelector('.fire');
 
+let rollCubes = [];
+let rollResult = [];
+
 // Таймер неактивности интефейса при бросках
 let inactivityTimeout;
 const incativeCubes = [];
@@ -65,8 +68,8 @@ function roll(cube) {
     isSuccessfullRoll = false;
   }
 
-  const minRotations = 1;
-  const maxRotations = 7;
+  const minRotations = 0;
+  const maxRotations = 3;
   const xRotations = Math.ceil(Math.random() * (maxRotations - minRotations)) + minRotations;
   const yRotations = Math.ceil(Math.random() * (maxRotations - minRotations)) + minRotations;
   const xResultDeg = resultsCoords[result - 1][0] + 360 * (rotationSign ? xRotations : -xRotations);
@@ -75,7 +78,7 @@ function roll(cube) {
   cube.style.transform = "rotateX(" + xResultDeg + "deg) rotateY(" + yResultDeg + "deg)";
 
 
-  // Повторный таймаут отдельных бросках
+  // Повторный таймаут отдельных бросков
   if (inactivityTimeout) clearTimeout(inactivityTimeout);
   // Деактивировать интерфейс
   rollButton.classList.add('_disabled');
@@ -86,10 +89,10 @@ function roll(cube) {
   inactivityTimeout = setTimeout(activeButtons, 6000);
 
   console.log(result, failCounter, successCounter);
-  return result;
+  rollResult.push(result);
 }
 
-function checkResults(rollResult, cubes) {
+function checkResults() {
   if (rollResult.some(i => i >= 5)) {
     failCounter = 0;
     successCounter++;
@@ -102,10 +105,10 @@ function checkResults(rollResult, cubes) {
     if (Math.random() < (failCounter + 3) * 0.1) {
       console.log('luck is coming');
 
-      // Для обхожа воспроизведения на iphone
+      // Для обхода воспроизведения на iphone
       harp.play(); harp.pause();
       setTimeout(luckCome, 6500);
-      setTimeout(() => { reverseCubeByExternalForces(cubes, 'luck') }, 7500);
+      setTimeout(() => { reverseCubeByExternalForces('luck') }, 7500);
 
       failCounter = 0;
     }
@@ -115,10 +118,10 @@ function checkResults(rollResult, cubes) {
     if (Math.random() < (successCounter + 3) * 0.1) {
       console.log('devil is coming');
 
-      // Для обхожа воспроизведения на iphone
+      // Для обхода воспроизведения на iphone
       laugh.play(); laugh.pause();
       setTimeout(devilCome, 6500);
-      setTimeout(() => { reverseCubeByExternalForces(cubes, 'devil') }, 7500);
+      setTimeout(() => { reverseCubeByExternalForces('devil') }, 7500);
 
       successCounter = 0;
     }
@@ -154,7 +157,7 @@ function getNearestAngleSuccess(styleTransform, value) {
   return `rotateX(${resultsCoords[value - 1][0] + 360 * quantityXRotations}deg) rotateY(${resultsCoords[value - 1][1] + 360 * quantityYRotations}deg)`;
 }
 // Поворот кубов высшими силами
-function reverseCubeByExternalForces(cubes, force) {
+function reverseCubeByExternalForces(force) {
   const luckCubesQuantity = Math.random() > .7 ? (Math.random() > .8 ? (Math.random() > .9 ? (Math.random() > .95 ? 5 : 4) : 3) : 2) : 1;
   const devilCubesQuantity = Math.random() > .6 ? (Math.random() > .7 ? (Math.random() > .8 ? (Math.random() > .9 ? 5 : 4) : 3) : 2) : 1;
 
@@ -168,8 +171,20 @@ function reverseCubeByExternalForces(cubes, force) {
       break;
   }
 
-  for (let i = 0; (i < cubesQuantity && i < cubes.length); i++) {
-    cubes[i].style.transitionDuration = '2000ms';
+  for (let i = 0; (i < cubesQuantity && i < rollCubes.length); i++) {
+
+    let targetCubeIndex;
+    switch (force) {
+      case 'luck':
+        targetCubeIndex = rollResult.indexOf(rollResult.find(i => i === 1 || i === 2 || i === 3 || i === 4));
+        break;
+      case 'devil':
+        targetCubeIndex = rollResult.indexOf(rollResult.find(i => i === 6 || i === 5));
+        break;
+    }
+    const targetCube = rollCubes[targetCubeIndex];
+
+    targetCube.style.transitionDuration = '2000ms';
     
     let value;
     switch (force) {
@@ -181,9 +196,11 @@ function reverseCubeByExternalForces(cubes, force) {
         break;
     }
 
-    cubes[i].style.transform = getNearestAngleSuccess(cubes[i].style.transform, value);
+    targetCube.style.transform = getNearestAngleSuccess(targetCube.style.transform, value);
+    rollResult[targetCubeIndex] = value;
+    console.log(rollResult);
 
-    setTimeout(() => { cubes[i].style.transitionDuration = '6000ms'; }, 2000);
+    setTimeout(() => { targetCube.style.transitionDuration = '6000ms'; }, 2000);
   }
 }
 
@@ -199,21 +216,23 @@ removeButton.addEventListener("click", () => {
 // Ролл одного
 cubesContainer.addEventListener("click", (e) => {
   if (e.target.closest(".cube")) {
-    const rollResult = roll(e.target.closest(".cube"));
+    rollCubes = [e.target.closest(".cube")];
+    rollResult = [];
 
-    checkResults([rollResult], [e.target.closest(".cube")]);
+    roll(rollCubes[0]);
+    checkResults();
   }
 });
 // Ролл общий
 rollButton.addEventListener("click", () => {
-  const randomSortedCubes = Array.from(cubesContainer.children).sort((a, b) => (Math.random() > 0.5 ? 1 : -1)).map(i => i.querySelector(".cube"));
-  const rollResults = randomSortedCubes.map((i) => roll(i));
-
-  checkResults(rollResults, randomSortedCubes);
+  rollCubes = Array.from(cubesContainer.children).sort((a, b) => (Math.random() > 0.5 ? 1 : -1)).map(i => i.querySelector(".cube"));
+  rollResult = [];
+  
+  rollCubes.forEach((i) => roll(i));
+  checkResults();
 });
 successButton.addEventListener("click", async () => {
   isSuccessfullRoll = true;
-  laugh.play();
 });
 infoButton.addEventListener('click', () => {
   infoOverlay.classList.toggle('_active');
