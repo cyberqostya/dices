@@ -102,6 +102,8 @@ function checkResults(rollResult, cubes) {
     if (Math.random() < (failCounter + 3) * 0.1) {
       console.log('luck is coming');
 
+      // Для обхожа воспроизведения на iphone
+      harp.play(); harp.pause();
       setTimeout(luckCome, 6500);
       setTimeout(() => { reverseCubeByExternalForces(cubes, 'luck') }, 7500);
 
@@ -113,6 +115,8 @@ function checkResults(rollResult, cubes) {
     if (Math.random() < (successCounter + 3) * 0.1) {
       console.log('devil is coming');
 
+      // Для обхожа воспроизведения на iphone
+      laugh.play(); laugh.pause();
       setTimeout(devilCome, 6500);
       setTimeout(() => { reverseCubeByExternalForces(cubes, 'devil') }, 7500);
 
@@ -209,10 +213,6 @@ rollButton.addEventListener("click", () => {
 });
 successButton.addEventListener("click", async () => {
   isSuccessfullRoll = true;
-  harp.play();
-  harp.pause();
-  await new Promise((res,rej)=>setTimeout(res, 5000));
-  harp.play();
 });
 infoButton.addEventListener('click', () => {
   infoOverlay.classList.toggle('_active');
