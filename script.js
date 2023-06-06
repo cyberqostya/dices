@@ -210,8 +210,9 @@ rollButton.addEventListener("click", () => {
 successButton.addEventListener("click", async () => {
   isSuccessfullRoll = true;
   harp.play();
+  harp.pause();
   await new Promise((res,rej)=>setTimeout(res, 5000));
-  laugh.play();
+  harp.play();
 });
 infoButton.addEventListener('click', () => {
   infoOverlay.classList.toggle('_active');
